@@ -41,7 +41,7 @@ def register(request):
                                                 email=email,
                                                 password=password)
                 user.save()
-                # return redirect('login')
+                  return redirect('login')
         else:
             messages.info(request, "password didn't match")
             return redirect('register')
