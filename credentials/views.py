@@ -22,12 +22,16 @@ def login(request):
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        password = request.POST['password']
-        cpassword = request.POST['password1']
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        cpassword = request.POST.get('password1')
+
+        if not (username and first_name and last_name and email and password and cpassword):
+            messages.info(request, "Please fill in all the fields")
+            return redirect('register')
 
         if password == cpassword:
             if User.objects.filter(username=username).exists():
@@ -41,11 +45,10 @@ def register(request):
                                                 email=email,
                                                 password=password)
                 user.save()
-                  return redirect('login')
+                return redirect('login')
         else:
-            messages.info(request, "password didn't match")
+            messages.info(request, "Passwords do not match")
             return redirect('register')
-        return redirect('/')
 
     return render(request, "register.html")
 
